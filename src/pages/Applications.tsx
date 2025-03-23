@@ -18,7 +18,7 @@ const Applications = () => {
     },
     {
       id: '2',
-      jobTitle: 'Category Manager Assistant',
+      jobTitle: 'Assistant Category Manager',
       company: 'Retail Solutions',
       platform: 'Indeed',
       status: 'applied',
@@ -94,9 +94,9 @@ const Applications = () => {
       
       <main className="flex-1 container max-w-7xl px-4 py-8 mx-auto">
         <div className="animate-fade-in">
-          <h1 className="text-3xl font-semibold mb-6">Your Applications</h1>
+          <h1 className="text-3xl font-semibold mb-6">Vos Candidatures</h1>
           <p className="text-muted-foreground mb-8">
-            Track all of your automated job applications in one place.
+            Suivez toutes vos candidatures automatisées en un seul endroit.
           </p>
           
           <ApplicationsList applications={applications} />

@@ -9,10 +9,10 @@ export const Header: React.FC = () => {
   const location = useLocation();
   
   const navItems = [
-    { path: '/', label: 'Dashboard', icon: <Home className="h-4 w-4 mr-2" /> },
-    { path: '/applications', label: 'Applications', icon: <BarChart2 className="h-4 w-4 mr-2" /> },
-    { path: '/resume', label: 'Resume', icon: <FileText className="h-4 w-4 mr-2" /> },
-    { path: '/settings', label: 'Settings', icon: <Settings className="h-4 w-4 mr-2" /> },
+    { path: '/', label: 'Tableau de Bord', icon: <Home className="h-4 w-4 mr-2" /> },
+    { path: '/applications', label: 'Candidatures', icon: <BarChart2 className="h-4 w-4 mr-2" /> },
+    { path: '/resume', label: 'CV', icon: <FileText className="h-4 w-4 mr-2" /> },
+    { path: '/settings', label: 'Paramètres', icon: <Settings className="h-4 w-4 mr-2" /> },
   ];
 
   return (
@@ -28,7 +28,7 @@ export const Header: React.FC = () => {
               <div className="w-8 h-8 rounded-md bg-primary/10 text-primary flex items-center justify-center mr-2">
                 <span className="font-bold">A</span>
               </div>
-              <span className="font-semibold tracking-tight">Application Automator</span>
+              <span className="font-semibold tracking-tight">Automatiseur de Candidatures</span>
             </Link>
           </div>
           

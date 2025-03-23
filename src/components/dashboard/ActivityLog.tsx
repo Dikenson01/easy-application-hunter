@@ -49,7 +49,7 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ activities }) => {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="text-lg">Recent Activity</CardTitle>
+        <CardTitle className="text-lg">Activité Récente</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         <ScrollArea className="h-[300px]">
@@ -84,8 +84,8 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ activities }) => {
             ) : (
               <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
                 <Clock className="h-10 w-10 mb-2 opacity-20" />
-                <p>No recent activity</p>
-                <p className="text-xs">Activities will appear here once the bot starts working</p>
+                <p>Aucune activité récente</p>
+                <p className="text-xs">Les activités apparaîtront ici une fois le bot en marche</p>
               </div>
             )}
           </div>

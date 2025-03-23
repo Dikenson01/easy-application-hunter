@@ -80,13 +80,13 @@ export const BotControl: React.FC<BotControlProps> = ({
   const getStatusBadge = () => {
     switch (status) {
       case 'running':
-        return <Badge className="bg-green-500">Running</Badge>;
+        return <Badge className="bg-green-500">En cours</Badge>;
       case 'paused':
-        return <Badge variant="outline" className="text-amber-600 bg-amber-50 border-amber-200">Paused</Badge>;
+        return <Badge variant="outline" className="text-amber-600 bg-amber-50 border-amber-200">En pause</Badge>;
       case 'error':
-        return <Badge variant="destructive">Error</Badge>;
+        return <Badge variant="destructive">Erreur</Badge>;
       default:
-        return <Badge variant="outline">Idle</Badge>;
+        return <Badge variant="outline">Inactif</Badge>;
     }
   };
 
@@ -100,8 +100,8 @@ export const BotControl: React.FC<BotControlProps> = ({
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle className="text-xl">Bot Status</CardTitle>
-            <CardDescription>Control the application bot</CardDescription>
+            <CardTitle className="text-xl">Statut du Bot</CardTitle>
+            <CardDescription>Contrôlez le bot de candidature</CardDescription>
           </div>
           {getStatusBadge()}
         </div>
@@ -109,21 +109,21 @@ export const BotControl: React.FC<BotControlProps> = ({
       <CardContent className="pb-2">
         <div className="space-y-4">
           <div className="flex flex-col space-y-1">
-            <div className="text-sm text-muted-foreground">Last run:</div>
+            <div className="text-sm text-muted-foreground">Dernière exécution :</div>
             <div className="font-medium">
-              {lastRun ? lastRun.toLocaleString() : 'Never run'}
+              {lastRun ? lastRun.toLocaleString() : 'Jamais exécuté'}
             </div>
           </div>
           
           {status === 'running' && nextRun && (
             <>
               <div className="flex flex-col space-y-1">
-                <div className="text-sm text-muted-foreground">Next run:</div>
+                <div className="text-sm text-muted-foreground">Prochaine exécution :</div>
                 <div className="font-medium">{nextRun.toLocaleString()}</div>
               </div>
               
               <div className="flex flex-col space-y-1">
-                <div className="text-sm text-muted-foreground">Time remaining:</div>
+                <div className="text-sm text-muted-foreground">Temps restant :</div>
                 <div className="text-2xl font-bold font-mono text-primary">{timeRemaining}</div>
               </div>
             </>
@@ -134,18 +134,18 @@ export const BotControl: React.FC<BotControlProps> = ({
         {status === 'running' ? (
           <Button onClick={handleStop} variant="outline" className="text-amber-600 border-amber-200 hover:bg-amber-50">
             <PauseCircle className="h-4 w-4 mr-2" />
-            Pause Bot
+            Mettre en Pause
           </Button>
         ) : (
           <Button onClick={handleStart} variant="outline" className="text-green-600 border-green-200 hover:bg-green-50">
             <PlayCircle className="h-4 w-4 mr-2" />
-            Start Bot
+            Démarrer le Bot
           </Button>
         )}
         
         <Button onClick={handleReset} variant="ghost" size="icon">
           <RefreshCw className="h-4 w-4" />
-          <span className="sr-only">Reset</span>
+          <span className="sr-only">Réinitialiser</span>
         </Button>
       </CardFooter>
     </Card>

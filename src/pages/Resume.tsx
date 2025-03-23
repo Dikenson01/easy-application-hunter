@@ -14,8 +14,8 @@ const Resume = () => {
   const handleFileSelected = (file: File) => {
     setResumeFile(file);
     toast({
-      title: "Resume Updated",
-      description: "Your resume has been updated successfully",
+      title: "CV Mis à Jour",
+      description: "Votre CV a été mis à jour avec succès",
     });
   };
 
@@ -25,9 +25,9 @@ const Resume = () => {
       
       <main className="flex-1 container max-w-7xl px-4 py-8 mx-auto">
         <div className="max-w-3xl mx-auto animate-fade-in">
-          <h1 className="text-3xl font-semibold mb-6">Resume Manager</h1>
+          <h1 className="text-3xl font-semibold mb-6">Gestionnaire de CV</h1>
           <p className="text-muted-foreground mb-8">
-            Update and manage your resume for automated job applications.
+            Mettez à jour et gérez votre CV pour les candidatures automatisées.
           </p>
           
           <div className="grid gap-6">
@@ -38,18 +38,18 @@ const Resume = () => {
             
             <Card>
               <CardHeader>
-                <CardTitle className="text-xl">Resume Guidelines</CardTitle>
+                <CardTitle className="text-xl">Conseils pour votre CV</CardTitle>
                 <CardDescription>
-                  Recommendations to improve your application success rate
+                  Recommandations pour améliorer votre taux de réussite aux candidatures
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-start gap-2">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
                   <div>
-                    <h3 className="font-medium">PDF Format Only</h3>
+                    <h3 className="font-medium">Format PDF Uniquement</h3>
                     <p className="text-sm text-muted-foreground">
-                      Your resume must be in PDF format for compatibility with all job platforms.
+                      Votre CV doit être au format PDF pour assurer sa compatibilité avec toutes les plateformes d'emploi.
                     </p>
                   </div>
                 </div>
@@ -57,9 +57,9 @@ const Resume = () => {
                 <div className="flex items-start gap-2">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
                   <div>
-                    <h3 className="font-medium">Clear Contact Information</h3>
+                    <h3 className="font-medium">Coordonnées Claires</h3>
                     <p className="text-sm text-muted-foreground">
-                      Ensure your name, phone number, and email are clearly visible at the top of your resume.
+                      Assurez-vous que votre nom, numéro de téléphone et email sont clairement visibles en haut de votre CV.
                     </p>
                   </div>
                 </div>
@@ -67,10 +67,10 @@ const Resume = () => {
                 <div className="flex items-start gap-2">
                   <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
                   <div>
-                    <h3 className="font-medium">Avoid Complex Layouts</h3>
+                    <h3 className="font-medium">Évitez les Mises en Page Complexes</h3>
                     <p className="text-sm text-muted-foreground">
-                      Complex layouts or tables may not be properly parsed by application systems.
-                      Keep your layout simple and straightforward.
+                      Les mises en page ou tableaux complexes peuvent ne pas être correctement analysés par les systèmes de candidature.
+                      Gardez votre mise en page simple et directe.
                     </p>
                   </div>
                 </div>
@@ -78,10 +78,10 @@ const Resume = () => {
                 <div className="flex items-start gap-2">
                   <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
                   <div>
-                    <h3 className="font-medium">Keyword Optimization</h3>
+                    <h3 className="font-medium">Optimisation des Mots-Clés</h3>
                     <p className="text-sm text-muted-foreground">
-                      Include relevant keywords from the job descriptions you're targeting to improve 
-                      your chances of passing automated screening.
+                      Incluez des mots-clés pertinents issus des descriptions de poste que vous ciblez pour améliorer
+                      vos chances de passer les filtres automatisés.
                     </p>
                   </div>
                 </div>
@@ -92,17 +92,17 @@ const Resume = () => {
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-medium">Resume Status</h3>
+                      <h3 className="font-medium">Statut du CV</h3>
                       {resumeFile ? (
-                        <Badge className="bg-green-500">Active</Badge>
+                        <Badge className="bg-green-500">Actif</Badge>
                       ) : (
-                        <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200">Missing</Badge>
+                        <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200">Manquant</Badge>
                       )}
                     </div>
                     <p className="text-sm text-muted-foreground">
                       {resumeFile 
-                        ? `Your current resume "${resumeFile.name}" is ready for job applications.` 
-                        : "Please upload your resume to activate the application bot."}
+                        ? `Votre CV actuel "${resumeFile.name}" est prêt pour les candidatures.` 
+                        : "Veuillez télécharger votre CV pour activer le bot de candidature."}
                     </p>
                   </div>
                 </div>

@@ -23,60 +23,60 @@ const Index = () => {
     {
       id: '1',
       type: 'success' as const,
-      message: 'Applied to Marketing Assistant at CompanyX',
-      timestamp: '10:45 AM',
-      details: 'Application submitted through LinkedIn',
+      message: 'Candidature envoyée : Assistant Marketing chez CompanyX',
+      timestamp: '10:45',
+      details: 'Candidature soumise via LinkedIn',
     },
     {
       id: '2',
       type: 'success' as const,
-      message: 'Applied to Commercial Assistant at CompanyY',
-      timestamp: '9:30 AM',
-      details: 'Application submitted through Indeed',
+      message: 'Candidature envoyée : Assistant Commercial chez CompanyY',
+      timestamp: '9:30',
+      details: 'Candidature soumise via Indeed',
     },
     {
       id: '3',
       type: 'error' as const,
-      message: 'Failed to apply to Sales Associate at CompanyZ',
-      timestamp: '9:15 AM',
-      details: 'Captcha detected. Manual intervention required.',
+      message: 'Échec de candidature : Commercial chez CompanyZ',
+      timestamp: '9:15',
+      details: 'Captcha détecté. Intervention manuelle requise.',
     },
     {
       id: '4',
       type: 'info' as const,
-      message: 'Bot scheduled to run again',
-      timestamp: 'Tomorrow, 9:00 AM',
+      message: 'Bot programmé pour redémarrer',
+      timestamp: 'Demain, 9:00',
     },
     {
       id: '5',
       type: 'warning' as const,
-      message: 'Resume update recommended',
-      timestamp: 'Yesterday',
-      details: 'Resume is over 30 days old',
+      message: 'Mise à jour du CV recommandée',
+      timestamp: 'Hier',
+      details: 'Votre CV date de plus de 30 jours',
     },
   ];
   
   const handleStartBot = () => {
     setBotRunning(true);
     toast({
-      title: "Bot Started",
-      description: "The application bot is now running in the background",
+      title: "Bot Démarré",
+      description: "Le bot de candidature fonctionne maintenant en arrière-plan",
     });
   };
   
   const handleStopBot = () => {
     setBotRunning(false);
     toast({
-      title: "Bot Paused",
-      description: "The application bot has been paused",
+      title: "Bot en Pause",
+      description: "Le bot de candidature a été mis en pause",
     });
   };
   
   const handleResetBot = () => {
     setBotRunning(false);
     toast({
-      title: "Bot Reset",
-      description: "The application bot has been reset",
+      title: "Bot Réinitialisé",
+      description: "Le bot de candidature a été réinitialisé",
     });
   };
 
@@ -100,28 +100,28 @@ const Index = () => {
           <div className="md:col-span-2">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <StatusCard 
-                title="Total Applications" 
+                title="Total Candidatures" 
                 value={stats.totalApplications}
-                description="All time"
+                description="Historique"
                 icon={<Briefcase className="h-4 w-4" />}
               />
               <StatusCard 
-                title="Today's Applications" 
+                title="Candidatures du Jour" 
                 value={stats.todayApplications}
                 trend="up"
                 trendValue="+3"
                 icon={<Clock className="h-4 w-4" />}
               />
               <StatusCard 
-                title="Active Jobs" 
+                title="Offres Actives" 
                 value={stats.activeJobs}
-                description="Paris region"
+                description="Région parisienne"
                 icon={<Building className="h-4 w-4" />}
               />
               <StatusCard 
-                title="Avg. Travel Time" 
+                title="Temps de Trajet Moyen" 
                 value={stats.avgTravelTime}
-                description="From Vitry-sur-Seine"
+                description="Depuis Vitry-sur-Seine"
                 icon={<MapPin className="h-4 w-4" />}
               />
             </div>
@@ -137,10 +137,11 @@ const Index = () => {
             <AlertCircle className="h-5 w-5 text-amber-500" />
           </div>
           <div className="flex-1">
-            <h3 className="font-medium text-amber-800">Manual intervention may be required</h3>
+            <h3 className="font-medium text-amber-800">Intervention manuelle parfois nécessaire</h3>
             <p className="text-sm text-amber-700 mt-1">
-              Some job platforms use captchas to prevent automated applications. When a captcha is detected, 
-              the bot will pause and notify you to complete the verification manually.
+              Certaines plateformes d'emploi utilisent des captchas pour empêcher les candidatures automatisées. 
+              Lorsqu'un captcha est détecté, le bot se met en pause et vous notifie pour compléter 
+              la vérification manuellement.
             </p>
           </div>
         </div>

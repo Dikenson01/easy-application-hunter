@@ -64,9 +64,9 @@ export const ResumeUploader: React.FC<ResumeUploaderProps> = ({
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-xl">Resume</CardTitle>
+        <CardTitle className="text-xl">CV</CardTitle>
         <CardDescription>
-          Upload your resume in PDF format. This will be used for all job applications.
+          Téléchargez votre CV au format PDF. Il sera utilisé pour toutes les candidatures.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -94,11 +94,11 @@ export const ResumeUploader: React.FC<ResumeUploaderProps> = ({
                 <FileText className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <p className="font-medium">{selectedFile?.name || "Your resume"}</p>
+                <p className="font-medium">{selectedFile?.name || "Votre CV"}</p>
                 <p className="text-sm text-muted-foreground">
                   {uploadStatus === 'success' && (
                     <span className="flex items-center justify-center gap-1 text-green-600">
-                      <Check className="h-4 w-4" /> Successfully uploaded
+                      <Check className="h-4 w-4" /> Téléchargé avec succès
                     </span>
                   )}
                 </p>
@@ -108,7 +108,7 @@ export const ResumeUploader: React.FC<ResumeUploaderProps> = ({
                 size="sm" 
                 onClick={triggerFileInput}
               >
-                Replace PDF
+                Remplacer le PDF
               </Button>
             </div>
           ) : (
@@ -116,16 +116,16 @@ export const ResumeUploader: React.FC<ResumeUploaderProps> = ({
               <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mb-4">
                 <FileUp className="h-6 w-6 text-muted-foreground" />
               </div>
-              <h3 className="text-lg font-medium mb-1">Upload your resume</h3>
+              <h3 className="text-lg font-medium mb-1">Téléchargez votre CV</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Drag & drop your PDF file here or click to browse
+                Glissez-déposez votre fichier PDF ici ou cliquez pour parcourir
               </p>
               <Button 
                 variant="secondary" 
                 size="sm" 
                 onClick={triggerFileInput}
               >
-                Select PDF file
+                Sélectionner un fichier PDF
               </Button>
             </>
           )}
@@ -134,7 +134,7 @@ export const ResumeUploader: React.FC<ResumeUploaderProps> = ({
       {(selectedFile || currentResume) && (
         <CardFooter className="border-t bg-muted/30 justify-between px-6 py-3">
           <div className="text-sm text-muted-foreground">
-            <span>Last updated: {new Date().toLocaleDateString()}</span>
+            <span>Dernière mise à jour : {new Date().toLocaleDateString()}</span>
           </div>
           <Button
             variant="ghost"
@@ -145,7 +145,7 @@ export const ResumeUploader: React.FC<ResumeUploaderProps> = ({
               setUploadStatus('idle');
             }}
           >
-            <X className="h-4 w-4 mr-1" /> Remove
+            <X className="h-4 w-4 mr-1" /> Supprimer
           </Button>
         </CardFooter>
       )}
