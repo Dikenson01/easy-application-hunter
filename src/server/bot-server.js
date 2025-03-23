@@ -5,6 +5,7 @@ const { db } = require('./firebase-admin');
 const jobScraper = require('./job-scraper');
 const jobApplicator = require('./job-applicator');
 const admin = require('firebase-admin');
+const { db } = admin.firestore();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
