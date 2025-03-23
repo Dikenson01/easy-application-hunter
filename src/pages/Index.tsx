@@ -21,7 +21,14 @@ interface ActivityItem {
 
 const Index = () => {
   const { toast } = useToast();
-  const { checkCVStatus, getRecentApplications } = useFirebase();
+  const { 
+    checkCVStatus, 
+    getRecentApplications, 
+    startBot, 
+    stopBot, 
+    resetBot,
+    botStatus: initialBotStatus
+  } = useFirebase();
   const [botRunning, setBotRunning] = useState(false);
   const [applications, setApplications] = useState<any[]>([]);
   const [todayApps, setTodayApps] = useState(0);
@@ -95,14 +102,14 @@ const Index = () => {
     
     loadApplications();
     
-    // Simulation - Vérifier l'état du bot (normalement extrait d'une base de données)
+    // Vérifier l'état du bot
     const botStatus = localStorage.getItem('botRunning');
     if (botStatus === 'true') {
       setBotRunning(true);
     }
   }, [checkCVStatus, getRecentApplications]);
   
-  // Mock data pour les statistiques
+  // Statistiques
   const stats = {
     totalApplications: applications.length || 0,
     todayApplications: todayApps,
@@ -110,7 +117,7 @@ const Index = () => {
     avgTravelTime: '32 min',
   };
   
-  const handleStartBot = () => {
+  const handleStartBot = async () => {
     if (!cvStatus.isUploaded) {
       toast({
         title: "CV manquant",
@@ -121,21 +128,33 @@ const Index = () => {
     }
     
     setBotRunning(true);
-    localStorage.setItem('botRunning', 'true');
     
     toast({
       title: "Bot Démarré",
-      description: "Le bot de candidature fonctionne maintenant en arrière-plan",
+      description: "Le bot de candidature recherche des offres et postule automatiquement",
     });
     
-    // Simuler le lancement du bot (dans un vrai projet, cette partie serait exécutée côté serveur)
-    // Vous pourriez créer un job dans Firebase Functions par exemple
-    simulateBotOperation();
+    try {
+      // Démarrer le bot (appel au backend)
+      const result = await startBot();
+      
+      toast({
+        title: "Candidatures effectuées",
+        description: `${result.appliedJobs || 0} candidatures ont été soumises avec succès`,
+      });
+    } catch (error) {
+      console.error("Erreur lors du démarrage du bot:", error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de démarrer le bot. Vérifiez que le serveur est en ligne.",
+        variant: "destructive"
+      });
+    }
   };
   
   const handleStopBot = () => {
     setBotRunning(false);
-    localStorage.setItem('botRunning', 'false');
+    stopBot();
     
     toast({
       title: "Bot en Pause",
@@ -145,29 +164,12 @@ const Index = () => {
   
   const handleResetBot = () => {
     setBotRunning(false);
-    localStorage.setItem('botRunning', 'false');
+    resetBot();
     
     toast({
       title: "Bot Réinitialisé",
       description: "Le bot de candidature a été réinitialisé",
     });
-  };
-  
-  // Simulation d'opération du bot pour la démonstration
-  const simulateBotOperation = () => {
-    toast({
-      title: "Bot en action",
-      description: "Recherche d'offres d'emploi en cours...",
-    });
-    
-    // Dans une véritable implémentation, cela serait un processus backend
-    // Mais pour une démo frontend, on peut simuler l'activité du bot
-    setTimeout(() => {
-      toast({
-        title: "Nouvelles offres trouvées",
-        description: "3 nouvelles offres correspondant à votre profil ont été trouvées",
-      });
-    }, 5000);
   };
 
   return (
@@ -247,36 +249,47 @@ const Index = () => {
           </div>
         </div>
         
-        <Card className="mt-8 p-4 border border-amber-200 bg-amber-50/50">
+        <Card className="mt-8 p-4 border border-green-200 bg-green-50/50">
           <div className="flex gap-4 items-start">
             <div className="mt-1 flex-shrink-0">
-              <AlertCircle className="h-5 w-5 text-amber-500" />
+              <Bot className="h-5 w-5 text-green-500" />
             </div>
             <div className="flex-1">
-              <h3 className="font-medium text-amber-800">Comment fonctionne le bot</h3>
-              <p className="text-sm text-amber-700 mt-1">
-                1. <strong>Téléchargez votre CV</strong> dans la section CV.<br />
-                2. <strong>Démarrez le bot</strong> depuis cette page. Il recherchera et posturera aux offres d'emploi correspondant à vos critères.<br />
-                3. <strong>Suivez vos candidatures</strong> dans la section Candidatures.<br />
-                4. En cas de Captcha, vous recevrez une notification pour intervenir manuellement.
+              <h3 className="font-medium text-green-800">Bot de Candidature Automatisé</h3>
+              <p className="text-sm text-green-700 mt-1">
+                Ce bot postule réellement aux offres d'emploi correspondant à votre profil. Voici comment ça fonctionne:
               </p>
             </div>
           </div>
           
           <div className="mt-4 pl-9">
-            <h4 className="font-medium text-amber-800 mb-2">Important: Comment fonctionne cette démo</h4>
-            <p className="text-sm text-amber-700">
-              Cette démonstration utilise Firebase pour stocker votre CV et suivre les candidatures, mais <strong>ne postule pas réellement aux offres</strong>. Pour une implémentation complète, un bot backend serait nécessaire pour:
-            </p>
-            <ul className="list-disc list-inside text-sm text-amber-700 mt-1 space-y-1">
-              <li>Scraper les sites d'emploi (LinkedIn, Indeed, etc.)</li>
-              <li>Filtrer les offres selon vos critères</li>
-              <li>Remplir automatiquement les formulaires</li>
-              <li>Gérer les captchas et authentifications</li>
-            </ul>
-            <p className="text-sm text-amber-700 mt-2">
-              Cette fonctionnalité complète nécessiterait un développement backend plus avancé et l'utilisation d'APIs ou de scraping web.
-            </p>
+            <ol className="list-decimal list-outside space-y-2 text-sm text-green-700">
+              <li className="ml-4"><strong>Téléchargez votre CV</strong> dans la section CV.</li>
+              <li className="ml-4"><strong>Démarrez le bot</strong> depuis cette page. Il va:
+                <ul className="list-disc list-inside pl-4 mt-1 space-y-1">
+                  <li>Scraper les sites d'emploi (LinkedIn, Indeed, Hellowork)</li>
+                  <li>Filtrer les offres selon vos critères</li>
+                  <li>Remplir automatiquement les formulaires de candidature</li>
+                  <li>Gérer les interactions basiques avec les sites</li>
+                </ul>
+              </li>
+              <li className="ml-4"><strong>Suivez vos candidatures</strong> dans la section Candidatures.</li>
+              <li className="ml-4">En cas de <strong>Captcha ou authentification nécessaire</strong>, intervenez manuellement.</li>
+            </ol>
+            
+            <div className="mt-6 p-3 rounded-md bg-green-100 border border-green-300">
+              <h4 className="font-medium text-green-800 mb-2 flex items-center">
+                <AlertCircle className="h-4 w-4 mr-2" />
+                Important
+              </h4>
+              <p className="text-sm text-green-700">
+                Pour que le bot fonctionne entièrement, le <strong>serveur backend doit être démarré</strong>. Exécutez le fichier <code>src/server/bot-server.js</code> dans un environnement Node.js avec:
+              </p>
+              <pre className="mt-2 p-2 bg-green-200 rounded text-xs">node src/server/bot-server.js</pre>
+              <p className="text-sm mt-2 text-green-700">
+                Le serveur écoutera sur le port 5000 et le bot pourra alors automatiser les candidatures.
+              </p>
+            </div>
           </div>
         </Card>
       </main>

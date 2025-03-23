@@ -1,69 +1,39 @@
-# Welcome to your Lovable project
 
-## Project info
+# Bot de Candidature Automatisé
 
-**URL**: https://lovable.dev/projects/bbdb20b9-5822-44f3-a8ae-410fde8f8f03
+Application web avec un bot backend qui postule automatiquement aux offres d'emploi.
 
-## How can I edit this code?
+## Fonctionnalités
 
-There are several ways of editing your application.
+- Téléchargement de CV
+- Bot qui scrape LinkedIn, Indeed et Hellowork
+- Candidature automatisée aux offres d'emploi
+- Suivi des candidatures
+- Calcul du temps de trajet
 
-**Use Lovable**
+## Installation
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/bbdb20b9-5822-44f3-a8ae-410fde8f8f03) and start prompting.
+1. Cloner le repository
+2. Installer les dépendances avec `npm install`
+3. Démarrer l'application frontend avec `npm run dev`
+4. Démarrer le serveur bot backend avec `node src/server/bot-server.js`
 
-Changes made via Lovable will be committed automatically to this repo.
+## Configuration requise
 
-**Use your preferred IDE**
+Pour que le bot fonctionne complètement, vous aurez besoin de:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. Créer un compte de service Firebase et configurer `src/server/firebase-admin.js` avec vos identifiants
+2. Démarrer le serveur backend Node.js sur le port 5000
+3. Avoir un CV au format PDF à télécharger
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Utilisation
 
-Follow these steps:
+1. Accédez à la page "CV" et téléchargez votre CV
+2. Retournez au tableau de bord et démarrez le bot
+3. Suivez les candidatures dans la section "Candidatures"
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Notes importantes
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/bbdb20b9-5822-44f3-a8ae-410fde8f8f03) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+- Ce bot utilise Puppeteer pour automatiser les navigateurs web
+- Pour des performances optimales, lancez le bot sur un serveur avec suffisamment de RAM (minimum 4 Go)
+- Certains sites peuvent bloquer les robots, soyez prudent avec la fréquence des candidatures

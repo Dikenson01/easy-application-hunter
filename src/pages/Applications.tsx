@@ -1,12 +1,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { Header } from '@/components/ui/header';
-import { ApplicationsList, Application } from '@/components/applications/ApplicationsList';
+import { ApplicationsList } from '@/components/applications/ApplicationsList';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { AlertCircle, FileText, Loader2 } from 'lucide-react';
-import { useFirebase } from '@/hooks/use-firebase';
+import { useFirebase, Application } from '@/hooks/use-firebase';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
@@ -25,12 +25,15 @@ const Applications = () => {
         const apps = await getRecentApplications();
         
         // Formater les dates pour l'affichage
-        const formattedApps = apps.map(app => ({
-          ...app,
-          date: app.applyDate ? format(app.applyDate.toDate(), 'yyyy-MM-dd') : app.date
-        }));
+        const formattedApps = apps.map(app => {
+          const formattedApp = {
+            ...app,
+            date: app.applyDate ? format(app.applyDate.toDate(), 'yyyy-MM-dd') : app.date
+          };
+          return formattedApp;
+        });
         
-        setApplications(formattedApps);
+        setApplications(formattedApps as Application[]);
         setError(null);
       } catch (err) {
         console.error("Erreur lors du chargement des candidatures:", err);
@@ -74,57 +77,7 @@ const Applications = () => {
       location: 'Paris 15e',
       date: '2023-05-14',
       travelTime: '35 min',
-    },
-    {
-      id: '4',
-      jobTitle: 'Vendeur Spécialisé',
-      company: 'Electronics Store',
-      platform: 'Indeed',
-      status: 'applied',
-      location: 'Créteil',
-      date: '2023-05-13',
-      travelTime: '20 min',
-    },
-    {
-      id: '5',
-      jobTitle: 'Commercial B2B',
-      company: 'Service Pro',
-      platform: 'LinkedIn',
-      status: 'applied',
-      location: 'Ivry-sur-Seine',
-      date: '2023-05-12',
-      travelTime: '15 min',
-    },
-    {
-      id: '6',
-      jobTitle: 'Assistant Category Manager',
-      company: 'Supermarket Chain',
-      platform: 'Hellowork',
-      status: 'pending',
-      location: 'Paris 13e',
-      date: '2023-05-12',
-      travelTime: '30 min',
-    },
-    {
-      id: '7',
-      jobTitle: 'Assistant Commercial Export',
-      company: 'International Group',
-      platform: 'LinkedIn',
-      status: 'applied',
-      location: 'Villejuif',
-      date: '2023-05-11',
-      travelTime: '10 min',
-    },
-    {
-      id: '8',
-      jobTitle: 'Vendeur Conseil',
-      company: 'Retail Brand',
-      platform: 'Indeed',
-      status: 'applied',
-      location: 'Thiais',
-      date: '2023-05-10',
-      travelTime: '25 min',
-    },
+    }
   ];
 
   // Utiliser les vraies candidatures si disponibles, sinon les démos

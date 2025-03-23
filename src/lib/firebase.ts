@@ -8,7 +8,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyA-vxX7VK47JWfb0IvPIrKTJ0a0wS6PFeU",
   authDomain: "cv-auto-1f01e.firebaseapp.com",
   projectId: "cv-auto-1f01e",
-  storageBucket: "cv-auto-1f01e.appspot.com",
+  storageBucket: "cv-auto-1f01e.firebaseapp.com",
   messagingSenderId: "781780535299",
   appId: "1:781780535299:web:3f27b92171f3763178e636",
   measurementId: "G-M9SXEKFRZW"
