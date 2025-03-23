@@ -5,7 +5,9 @@ import { StatusCard } from '@/components/dashboard/StatusCard';
 import { ActivityLog } from '@/components/dashboard/ActivityLog';
 import { BotControl } from '@/components/dashboard/BotControl';
 import { useToast } from '@/hooks/use-toast';
-import { Clock, Briefcase, Building, X, MapPin, AlertCircle } from 'lucide-react';
+import { Clock, Briefcase, Building, X, MapPin, AlertCircle, FileUp } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const { toast } = useToast();
@@ -57,6 +59,15 @@ const Index = () => {
   ];
   
   const handleStartBot = () => {
+    if (!hasCvUploaded()) {
+      toast({
+        title: "CV manquant",
+        description: "Veuillez d'abord télécharger votre CV dans la section CV.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setBotRunning(true);
     toast({
       title: "Bot Démarré",
@@ -79,6 +90,11 @@ const Index = () => {
       description: "Le bot de candidature a été réinitialisé",
     });
   };
+  
+  // Simulation - À remplacer par une vérification réelle de la BDD
+  const hasCvUploaded = () => {
+    return localStorage.getItem('cvUploaded') === 'true';
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -92,8 +108,21 @@ const Index = () => {
               onStart={handleStartBot}
               onStop={handleStopBot}
               onReset={handleResetBot}
-              initialStatus="idle"
+              initialStatus={botRunning ? "running" : "idle"}
             />
+            
+            {!hasCvUploaded() && (
+              <div className="mt-4 p-4 rounded-lg border-2 border-amber-300 bg-amber-50 flex items-center gap-3">
+                <FileUp className="h-5 w-5 text-amber-500" />
+                <div className="flex-1">
+                  <p className="text-amber-800 font-medium">Étape 1: Téléchargez votre CV</p>
+                  <p className="text-sm text-amber-700">Vous devez d'abord télécharger votre CV avant de pouvoir démarrer le bot.</p>
+                  <Button asChild className="mt-2 bg-amber-500 hover:bg-amber-600">
+                    <Link to="/resume">Aller à la page CV</Link>
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
           
           {/* Statistics Cards */}
@@ -137,11 +166,12 @@ const Index = () => {
             <AlertCircle className="h-5 w-5 text-amber-500" />
           </div>
           <div className="flex-1">
-            <h3 className="font-medium text-amber-800">Intervention manuelle parfois nécessaire</h3>
+            <h3 className="font-medium text-amber-800">Comment fonctionne le bot</h3>
             <p className="text-sm text-amber-700 mt-1">
-              Certaines plateformes d'emploi utilisent des captchas pour empêcher les candidatures automatisées. 
-              Lorsqu'un captcha est détecté, le bot se met en pause et vous notifie pour compléter 
-              la vérification manuellement.
+              1. <strong>Téléchargez votre CV</strong> dans la section CV.<br />
+              2. <strong>Démarrez le bot</strong> depuis cette page. Il recherchera et posturera aux offres d'emploi correspondant à vos critères.<br />
+              3. <strong>Suivez vos candidatures</strong> dans la section Candidatures.<br />
+              4. En cas de Captcha, vous recevrez une notification pour intervenir manuellement.
             </p>
           </div>
         </div>

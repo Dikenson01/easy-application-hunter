@@ -1,9 +1,10 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileUp, FileText, X, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 interface ResumeUploaderProps {
   onFileSelected: (file: File) => void;
@@ -14,10 +15,20 @@ export const ResumeUploader: React.FC<ResumeUploaderProps> = ({
   onFileSelected, 
   currentResume 
 }) => {
+  const { toast } = useToast();
   const [isDragging, setIsDragging] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // Check if resume exists in localStorage for demo purposes
+    const storedCv = localStorage.getItem('cvUploaded');
+    if (storedCv === 'true' && !selectedFile) {
+      // Simulate that we already have a file
+      setUploadStatus('success');
+    }
+  }, [selectedFile]);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -36,6 +47,12 @@ export const ResumeUploader: React.FC<ResumeUploaderProps> = ({
       const file = e.dataTransfer.files[0];
       if (file.type === 'application/pdf') {
         handleFileSelect(file);
+      } else {
+        toast({
+          title: "Format non supporté",
+          description: "Veuillez télécharger uniquement des fichiers PDF.",
+          variant: "destructive"
+        });
       }
     }
   };
@@ -47,18 +64,43 @@ export const ResumeUploader: React.FC<ResumeUploaderProps> = ({
     // Simulate upload process
     setTimeout(() => {
       setUploadStatus('success');
+      localStorage.setItem('cvUploaded', 'true');
       onFileSelected(file);
+      
+      toast({
+        title: "CV téléchargé avec succès",
+        description: "Votre CV a été téléchargé et sera utilisé pour vos candidatures automatiques.",
+      });
     }, 1000);
   };
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      handleFileSelect(e.target.files[0]);
+      const file = e.target.files[0];
+      if (file.type === 'application/pdf') {
+        handleFileSelect(file);
+      } else {
+        toast({
+          title: "Format non supporté",
+          description: "Veuillez télécharger uniquement des fichiers PDF.",
+          variant: "destructive"
+        });
+      }
     }
   };
 
   const triggerFileInput = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+    setUploadStatus('idle');
+    localStorage.removeItem('cvUploaded');
+    toast({
+      title: "CV supprimé",
+      description: "Votre CV a été supprimé. Veuillez en télécharger un nouveau pour continuer.",
+    });
   };
 
   return (
@@ -88,7 +130,7 @@ export const ResumeUploader: React.FC<ResumeUploaderProps> = ({
             onChange={handleFileInputChange}
           />
           
-          {selectedFile || currentResume ? (
+          {selectedFile || (uploadStatus === 'success') ? (
             <div className="space-y-3">
               <div className="h-12 w-12 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
                 <FileText className="h-6 w-6 text-primary" />
@@ -100,6 +142,9 @@ export const ResumeUploader: React.FC<ResumeUploaderProps> = ({
                     <span className="flex items-center justify-center gap-1 text-green-600">
                       <Check className="h-4 w-4" /> Téléchargé avec succès
                     </span>
+                  )}
+                  {uploadStatus === 'uploading' && (
+                    <span className="text-amber-600">Téléchargement en cours...</span>
                   )}
                 </p>
               </div>
@@ -131,7 +176,7 @@ export const ResumeUploader: React.FC<ResumeUploaderProps> = ({
           )}
         </div>
       </CardContent>
-      {(selectedFile || currentResume) && (
+      {(selectedFile || uploadStatus === 'success') && (
         <CardFooter className="border-t bg-muted/30 justify-between px-6 py-3">
           <div className="text-sm text-muted-foreground">
             <span>Dernière mise à jour : {new Date().toLocaleDateString()}</span>
@@ -140,10 +185,7 @@ export const ResumeUploader: React.FC<ResumeUploaderProps> = ({
             variant="ghost"
             size="sm"
             className="text-destructive hover:text-destructive hover:bg-destructive/10"
-            onClick={() => {
-              setSelectedFile(null);
-              setUploadStatus('idle');
-            }}
+            onClick={handleRemoveFile}
           >
             <X className="h-4 w-4 mr-1" /> Supprimer
           </Button>
