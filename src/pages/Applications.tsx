@@ -1,15 +1,50 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Header } from '@/components/ui/header';
 import { ApplicationsList, Application } from '@/components/applications/ApplicationsList';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { AlertCircle, FileText } from 'lucide-react';
+import { AlertCircle, FileText, Loader2 } from 'lucide-react';
+import { useFirebase } from '@/hooks/use-firebase';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 const Applications = () => {
-  // Mock data for applications
-  const applications: Application[] = [
+  const { getRecentApplications, checkCVStatus } = useFirebase();
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  const cvStatus = checkCVStatus();
+  
+  useEffect(() => {
+    async function loadApplications() {
+      try {
+        setLoading(true);
+        const apps = await getRecentApplications();
+        
+        // Formater les dates pour l'affichage
+        const formattedApps = apps.map(app => ({
+          ...app,
+          date: app.applyDate ? format(app.applyDate.toDate(), 'yyyy-MM-dd') : app.date
+        }));
+        
+        setApplications(formattedApps);
+        setError(null);
+      } catch (err) {
+        console.error("Erreur lors du chargement des candidatures:", err);
+        setError("Impossible de charger les candidatures. Veuillez réessayer plus tard.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    loadApplications();
+  }, [getRecentApplications]);
+
+  // Données de démonstration pour afficher quelque chose si aucune vraie candidature n'existe
+  const demoApplications: Application[] = [
     {
       id: '1',
       jobTitle: 'Assistant Commercial',
@@ -92,10 +127,9 @@ const Applications = () => {
     },
   ];
 
-  // Simulation - À remplacer par une vérification réelle de la BDD
-  const hasCvUploaded = () => {
-    return localStorage.getItem('cvUploaded') === 'true';
-  };
+  // Utiliser les vraies candidatures si disponibles, sinon les démos
+  const displayApplications = applications.length > 0 ? applications : demoApplications;
+  const isUsingDemoData = applications.length === 0;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -108,7 +142,7 @@ const Applications = () => {
             Suivez toutes vos candidatures automatisées en un seul endroit.
           </p>
           
-          {!hasCvUploaded() && (
+          {!cvStatus.isUploaded && (
             <Card className="mb-6 border-amber-200 bg-amber-50/50">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
@@ -131,18 +165,39 @@ const Applications = () => {
             </Card>
           )}
           
-          <div className="mb-6 p-4 rounded-lg border border-amber-200 bg-amber-50/50 flex gap-4 items-start">
-            <AlertCircle className="h-5 w-5 text-amber-500 mt-1" />
-            <div>
-              <h3 className="font-medium text-amber-800">Données de démonstration</h3>
-              <p className="text-sm text-amber-700">
-                Les candidatures affichées ci-dessous sont des exemples. Une fois le bot actif avec votre CV, 
-                de véritables candidatures apparaîtront ici.
-              </p>
+          {isUsingDemoData && (
+            <div className="mb-6 p-4 rounded-lg border border-amber-200 bg-amber-50/50 flex gap-4 items-start">
+              <AlertCircle className="h-5 w-5 text-amber-500 mt-1" />
+              <div>
+                <h3 className="font-medium text-amber-800">Données de démonstration</h3>
+                <p className="text-sm text-amber-700">
+                  Les candidatures affichées ci-dessous sont des exemples. Une fois le bot actif avec votre CV, 
+                  de véritables candidatures apparaîtront ici.
+                </p>
+              </div>
             </div>
-          </div>
-          
-          <ApplicationsList applications={applications} />
+          )}
+
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="h-8 w-8 text-primary animate-spin" />
+              <span className="ml-3 text-lg">Chargement des candidatures...</span>
+            </div>
+          ) : error ? (
+            <div className="p-6 rounded-lg border border-destructive/20 bg-destructive/10 text-destructive">
+              <h3 className="font-medium mb-2">Erreur</h3>
+              <p>{error}</p>
+              <Button 
+                variant="outline" 
+                className="mt-3"
+                onClick={() => window.location.reload()}
+              >
+                Réessayer
+              </Button>
+            </div>
+          ) : (
+            <ApplicationsList applications={displayApplications} />
+          )}
         </div>
       </main>
     </div>

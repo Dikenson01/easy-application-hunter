@@ -1,22 +1,55 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/ui/header';
 import { ResumeUploader } from '@/components/resume/ResumeUploader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
-import { FileText, CheckCircle, AlertCircle } from 'lucide-react';
+import { FileText, CheckCircle, AlertCircle, Upload } from 'lucide-react';
+import { useFirebase } from '@/hooks/use-firebase';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 
 const Resume = () => {
   const { toast } = useToast();
+  const { uploadCV, isUploading, uploadProgress, uploadError, checkCVStatus } = useFirebase();
   const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [cvStatus, setCvStatus] = useState({
+    isUploaded: false,
+    fileName: null as string | null,
+    fileUrl: null as string | null
+  });
   
-  const handleFileSelected = (file: File) => {
+  useEffect(() => {
+    // Vérifier si un CV a déjà été téléchargé
+    const status = checkCVStatus();
+    setCvStatus(status);
+  }, []);
+  
+  const handleFileSelected = async (file: File) => {
     setResumeFile(file);
-    toast({
-      title: "CV Mis à Jour",
-      description: "Votre CV a été mis à jour avec succès",
-    });
+    
+    try {
+      await uploadCV(file);
+      
+      // Mettre à jour le statut du CV
+      setCvStatus({
+        isUploaded: true,
+        fileName: file.name,
+        fileUrl: localStorage.getItem('cvUrl')
+      });
+      
+      toast({
+        title: "CV Mis à Jour",
+        description: "Votre CV a été téléchargé avec succès",
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de télécharger votre CV. Veuillez réessayer.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -31,10 +64,59 @@ const Resume = () => {
           </p>
           
           <div className="grid gap-6">
-            <ResumeUploader 
-              onFileSelected={handleFileSelected}
-              currentResume={null}
-            />
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl">Télécharger votre CV</CardTitle>
+                <CardDescription>
+                  Téléchargez votre CV au format PDF pour que le bot puisse postuler automatiquement pour vous
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <ResumeUploader 
+                  onFileSelected={handleFileSelected}
+                  currentResume={cvStatus.fileName}
+                />
+                
+                {isUploading && (
+                  <div className="mt-4 space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Téléchargement en cours...</span>
+                      <span className="text-sm font-medium">{uploadProgress}%</span>
+                    </div>
+                    <Progress value={uploadProgress} className="h-2" />
+                  </div>
+                )}
+                
+                {uploadError && (
+                  <div className="mt-4 p-3 rounded-md bg-destructive/10 text-destructive text-sm">
+                    {uploadError}
+                  </div>
+                )}
+                
+                {cvStatus.isUploaded && cvStatus.fileName && (
+                  <div className="mt-4 p-4 rounded-lg border border-green-200 bg-green-50 flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 mt-1" />
+                    <div>
+                      <h3 className="font-medium text-green-800">CV téléchargé avec succès</h3>
+                      <p className="text-sm text-green-700">
+                        Votre CV <strong>"{cvStatus.fileName}"</strong> est prêt pour les candidatures automatiques.
+                      </p>
+                      {cvStatus.fileUrl && (
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="mt-2"
+                          onClick={() => window.open(cvStatus.fileUrl!, '_blank')}
+                        >
+                          <FileText className="h-4 w-4 mr-2" />
+                          Voir votre CV
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
             
             <Card>
               <CardHeader>
@@ -93,15 +175,15 @@ const Resume = () => {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-medium">Statut du CV</h3>
-                      {resumeFile ? (
+                      {cvStatus.isUploaded ? (
                         <Badge className="bg-green-500">Actif</Badge>
                       ) : (
                         <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200">Manquant</Badge>
                       )}
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      {resumeFile 
-                        ? `Votre CV actuel "${resumeFile.name}" est prêt pour les candidatures.` 
+                      {cvStatus.isUploaded && cvStatus.fileName
+                        ? `Votre CV actuel "${cvStatus.fileName}" est prêt pour les candidatures.` 
                         : "Veuillez télécharger votre CV pour activer le bot de candidature."}
                     </p>
                   </div>
