@@ -147,7 +147,7 @@ export function useFirebase() {
       return {
         id: docRef.id,
         ...application
-      };
+      } as Application; // Fixed: Added type assertion here
     } catch (error) {
       console.error("Error logging application:", error);
       throw error;
