@@ -1,7 +1,7 @@
 
 const puppeteer = require("puppeteer");
 const axios = require("axios");
-const { db, storage } = require("./firebase-admin");
+const { db, storage, admin } = require("./firebase-admin");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");

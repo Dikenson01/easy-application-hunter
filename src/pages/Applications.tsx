@@ -9,6 +9,7 @@ import { AlertCircle, FileText, Loader2 } from 'lucide-react';
 import { useFirebase, Application } from '@/hooks/use-firebase';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { Timestamp } from 'firebase/firestore';
 
 const Applications = () => {
   const { getRecentApplications, checkCVStatus } = useFirebase();
@@ -46,6 +47,11 @@ const Applications = () => {
     loadApplications();
   }, [getRecentApplications]);
 
+  // Créer des timestamps pour les dates de démonstration
+  const demoDate1 = Timestamp.fromDate(new Date('2023-05-15'));
+  const demoDate2 = Timestamp.fromDate(new Date('2023-05-14'));
+  const demoDate3 = Timestamp.fromDate(new Date('2023-05-14'));
+
   // Données de démonstration pour afficher quelque chose si aucune vraie candidature n'existe
   const demoApplications: Application[] = [
     {
@@ -57,6 +63,7 @@ const Applications = () => {
       location: 'Paris 9e',
       date: '2023-05-15',
       travelTime: '25 min',
+      applyDate: demoDate1,
     },
     {
       id: '2',
@@ -67,6 +74,7 @@ const Applications = () => {
       location: 'Boulogne-Billancourt',
       date: '2023-05-14',
       travelTime: '40 min',
+      applyDate: demoDate2,
     },
     {
       id: '3',
@@ -77,6 +85,7 @@ const Applications = () => {
       location: 'Paris 15e',
       date: '2023-05-14',
       travelTime: '35 min',
+      applyDate: demoDate3,
     }
   ];
 
