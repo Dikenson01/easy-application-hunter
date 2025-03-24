@@ -43,11 +43,11 @@ export const ApplicationsList: React.FC<ApplicationsListProps> = ({ applications
   const getStatusBadge = (status: Application['status']) => {
     switch (status) {
       case 'applied':
-        return <Badge className="bg-green-500">Applied</Badge>;
+        return <Badge className="bg-green-500">Candidature envoyée</Badge>;
       case 'error':
-        return <Badge variant="destructive">Error</Badge>;
+        return <Badge variant="destructive">Erreur</Badge>;
       case 'pending':
-        return <Badge variant="outline" className="text-amber-600 bg-amber-50 border-amber-200">Pending</Badge>;
+        return <Badge variant="outline" className="text-amber-600 bg-amber-50 border-amber-200">En attente</Badge>;
       default:
         return null;
     }
@@ -70,12 +70,12 @@ export const ApplicationsList: React.FC<ApplicationsListProps> = ({ applications
     <Card className="w-full">
       <CardHeader>
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <CardTitle className="text-xl">Job Applications</CardTitle>
+          <CardTitle className="text-xl">Liste des candidatures</CardTitle>
           <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
             <div className="relative flex items-center">
               <Search className="absolute left-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search applications..."
+                placeholder="Rechercher..."
                 className="pl-8 h-9 w-full md:w-[200px]"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -84,21 +84,21 @@ export const ApplicationsList: React.FC<ApplicationsListProps> = ({ applications
             <div className="flex items-center gap-2">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="h-9 w-full sm:w-[130px]">
-                  <SelectValue placeholder="Status" />
+                  <SelectValue placeholder="Statut" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="applied">Applied</SelectItem>
-                  <SelectItem value="error">Error</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="all">Tous les statuts</SelectItem>
+                  <SelectItem value="applied">Envoyées</SelectItem>
+                  <SelectItem value="error">Erreurs</SelectItem>
+                  <SelectItem value="pending">En attente</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={platformFilter} onValueChange={setPlatformFilter}>
                 <SelectTrigger className="h-9 w-full sm:w-[130px]">
-                  <SelectValue placeholder="Platform" />
+                  <SelectValue placeholder="Plateforme" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Platforms</SelectItem>
+                  <SelectItem value="all">Toutes</SelectItem>
                   <SelectItem value="LinkedIn">LinkedIn</SelectItem>
                   <SelectItem value="Indeed">Indeed</SelectItem>
                   <SelectItem value="Hellowork">Hellowork</SelectItem>
@@ -114,12 +114,12 @@ export const ApplicationsList: React.FC<ApplicationsListProps> = ({ applications
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Job Title</TableHead>
-                  <TableHead>Company</TableHead>
-                  <TableHead>Platform</TableHead>
-                  <TableHead>Location</TableHead>
+                  <TableHead>Poste</TableHead>
+                  <TableHead>Entreprise</TableHead>
+                  <TableHead>Plateforme</TableHead>
+                  <TableHead>Localisation</TableHead>
                   <TableHead>Date</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>Statut</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -133,7 +133,7 @@ export const ApplicationsList: React.FC<ApplicationsListProps> = ({ applications
                       <div className="flex flex-col">
                         <span>{application.location}</span>
                         {application.travelTime && (
-                          <span className="text-xs text-muted-foreground">{application.travelTime} from Vitry-sur-Seine</span>
+                          <span className="text-xs text-muted-foreground">{application.travelTime} depuis Vitry-sur-Seine</span>
                         )}
                       </div>
                     </TableCell>
@@ -142,7 +142,7 @@ export const ApplicationsList: React.FC<ApplicationsListProps> = ({ applications
                     <TableCell className="text-right">
                       <Button variant="ghost" size="icon" className="h-8 w-8">
                         <ExternalLink className="h-4 w-4" />
-                        <span className="sr-only">Open details</span>
+                        <span className="sr-only">Voir détails</span>
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -153,8 +153,8 @@ export const ApplicationsList: React.FC<ApplicationsListProps> = ({ applications
         ) : (
           <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
             <Filter className="h-10 w-10 mb-2 opacity-20" />
-            <p>No applications found</p>
-            <p className="text-xs">Try adjusting your filters or search criteria</p>
+            <p>Aucune candidature trouvée</p>
+            <p className="text-xs">Essayez d'ajuster vos filtres ou critères de recherche</p>
           </div>
         )}
       </CardContent>

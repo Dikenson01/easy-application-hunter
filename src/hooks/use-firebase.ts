@@ -60,7 +60,7 @@ export function useFirebase() {
       return response.data;
     } catch (error) {
       console.error("Erreur lors de la vérification du statut du bot:", error);
-      return { status: 'error', message: 'Impossible de contacter le bot' };
+      return { status: 'offline', message: 'Impossible de contacter le bot' };
     }
   };
 
@@ -157,6 +157,7 @@ export function useFirebase() {
     try {
       const userId = localStorage.getItem('userId');
       
+      // Essayer d'abord d'obtenir les données du serveur bot
       try {
         const response = await axios.get(`${BOT_SERVER_URL}/applications`, {
           params: { userId, limit: 20 }
@@ -169,6 +170,7 @@ export function useFirebase() {
         console.log("Le serveur bot n'est pas disponible, utilisation des données locales");
       }
       
+      // Si le serveur bot n'est pas disponible, utiliser Firestore
       let q;
       
       if (userId) {
@@ -186,25 +188,32 @@ export function useFirebase() {
         );
       }
       
-      const querySnapshot = await getDocs(q);
-      const applications: Application[] = [];
-      
-      querySnapshot.forEach((doc) => {
-        const data = doc.data() as DocumentData;
-        applications.push({
-          id: doc.id,
-          jobTitle: data.jobTitle as string,
-          company: data.company as string,
-          platform: data.platform as "LinkedIn" | "Indeed" | "Hellowork",
-          status: data.status as 'applied' | 'pending' | 'error',
-          location: data.location as string,
-          date: data.date as string,
-          travelTime: data.travelTime as string,
-          applyDate: data.applyDate as Timestamp
+      try {
+        const querySnapshot = await getDocs(q);
+        const applications: Application[] = [];
+        
+        querySnapshot.forEach((doc) => {
+          const data = doc.data() as DocumentData;
+          applications.push({
+            id: doc.id,
+            jobTitle: data.jobTitle as string,
+            company: data.company as string,
+            platform: data.platform as "LinkedIn" | "Indeed" | "Hellowork",
+            status: data.status as 'applied' | 'pending' | 'error',
+            location: data.location as string,
+            date: data.date as string,
+            travelTime: data.travelTime as string,
+            applyDate: data.applyDate as Timestamp
+          });
         });
-      });
-      
-      return applications;
+        
+        return applications;
+      } catch (firestoreError) {
+        console.error("Error getting applications from Firestore:", firestoreError);
+        // En cas d'erreur Firestore, retourner un tableau vide
+        // Pour éviter de bloquer l'interface utilisateur
+        return [];
+      }
     } catch (error) {
       console.error("Error getting applications:", error);
       return [];
@@ -276,6 +285,7 @@ export function useFirebase() {
     startBot,
     stopBot,
     resetBot,
+    checkBotStatus,
     isBotRunning,
     botStatus,
     isUploading,

@@ -5,19 +5,45 @@ import { ApplicationsList } from '@/components/applications/ApplicationsList';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { AlertCircle, FileText, Loader2 } from 'lucide-react';
+import { AlertCircle, FileText, Loader2, CheckCircle2 } from 'lucide-react';
 import { useFirebase, Application } from '@/hooks/use-firebase';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Timestamp } from 'firebase/firestore';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { useToast } from '@/hooks/use-toast';
 
 const Applications = () => {
-  const { getRecentApplications, checkCVStatus } = useFirebase();
+  const { getRecentApplications, checkCVStatus, checkBotStatus } = useFirebase();
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [systemStatus, setSystemStatus] = useState<'online' | 'offline' | 'checking'>('checking');
+  const { toast } = useToast();
   
   const cvStatus = checkCVStatus();
+  
+  // Vérifier l'état du système
+  useEffect(() => {
+    const checkSystem = async () => {
+      try {
+        const status = await checkBotStatus();
+        setSystemStatus(status.status === 'online' ? 'online' : 'offline');
+        
+        if (status.status === 'online') {
+          toast({
+            title: "Système en ligne",
+            description: "L'automatiseur de candidatures est opérationnel",
+            variant: "default",
+          });
+        }
+      } catch (err) {
+        setSystemStatus('offline');
+      }
+    };
+    
+    checkSystem();
+  }, [toast, checkBotStatus]);
   
   useEffect(() => {
     async function loadApplications() {
@@ -29,7 +55,7 @@ const Applications = () => {
         const formattedApps = apps.map(app => {
           const formattedApp = {
             ...app,
-            date: app.applyDate ? format(app.applyDate.toDate(), 'yyyy-MM-dd') : app.date
+            date: app.applyDate ? format(app.applyDate.toDate(), 'dd/MM/yyyy') : app.date
           };
           return formattedApp;
         });
@@ -61,7 +87,7 @@ const Applications = () => {
       platform: 'LinkedIn',
       status: 'applied',
       location: 'Paris 9e',
-      date: '2023-05-15',
+      date: '15/05/2023',
       travelTime: '25 min',
       applyDate: demoDate1,
     },
@@ -72,7 +98,7 @@ const Applications = () => {
       platform: 'Indeed',
       status: 'applied',
       location: 'Boulogne-Billancourt',
-      date: '2023-05-14',
+      date: '14/05/2023',
       travelTime: '40 min',
       applyDate: demoDate2,
     },
@@ -83,7 +109,7 @@ const Applications = () => {
       platform: 'Hellowork',
       status: 'error',
       location: 'Paris 15e',
-      date: '2023-05-14',
+      date: '14/05/2023',
       travelTime: '35 min',
       applyDate: demoDate3,
     }
@@ -99,7 +125,22 @@ const Applications = () => {
       
       <main className="flex-1 container max-w-7xl px-4 py-8 mx-auto">
         <div className="animate-fade-in">
-          <h1 className="text-3xl font-semibold mb-6">Vos Candidatures</h1>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-3xl font-semibold">Vos Candidatures</h1>
+            {systemStatus === 'online' && (
+              <Alert className="max-w-fit py-2 border-green-200 bg-green-50/50">
+                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                <AlertTitle className="ml-2 text-green-700">Système en ligne</AlertTitle>
+              </Alert>
+            )}
+            {systemStatus === 'offline' && (
+              <Alert className="max-w-fit py-2 border-amber-200 bg-amber-50/50">
+                <AlertCircle className="h-4 w-4 text-amber-500" />
+                <AlertTitle className="ml-2 text-amber-700">Système hors ligne</AlertTitle>
+              </Alert>
+            )}
+          </div>
+          
           <p className="text-muted-foreground mb-8">
             Suivez toutes vos candidatures automatisées en un seul endroit.
           </p>
