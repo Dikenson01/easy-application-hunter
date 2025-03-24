@@ -1,4 +1,3 @@
-
 const express = require('express');
 const cors = require('cors');
 const { db } = require('./firebase-admin');
@@ -30,6 +29,11 @@ async function getUserProfile(userId) {
     throw error;
   }
 }
+
+// Routes API
+app.get('/api/status', (req, res) => {
+  res.json({ status: 'online', message: 'Serveur bot opérationnel' });
+});
 
 // Démarrer le scraping
 app.post('/api/scrape', async (req, res) => {

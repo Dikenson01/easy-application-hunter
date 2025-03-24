@@ -72,10 +72,7 @@ export const ServerStatus: React.FC<ServerStatusProps> = ({ className }) => {
                   <span className="text-sm font-medium text-red-700">Hors ligne</span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Lancez le serveur avec la commande: 
-                  <code className="ml-1 px-1 bg-slate-100 rounded text-[10px]">
-                    node src/server-bot/startup.js
-                  </code>
+                  Lancez le serveur avec: <code className="px-1 bg-slate-100 rounded text-[10px]">node src/server-bot/startup.js</code>
                 </p>
               </div>
             </>
