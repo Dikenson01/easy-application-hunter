@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { 
@@ -189,17 +190,17 @@ export function useFirebase() {
       const applications: Application[] = [];
       
       querySnapshot.forEach((doc) => {
-        const data = doc.data();
+        const data = doc.data() as DocumentData;
         applications.push({
           id: doc.id,
-          jobTitle: data.jobTitle,
-          company: data.company,
+          jobTitle: data.jobTitle as string,
+          company: data.company as string,
           platform: data.platform as "LinkedIn" | "Indeed" | "Hellowork",
           status: data.status as 'applied' | 'pending' | 'error',
-          location: data.location,
-          date: data.date,
-          travelTime: data.travelTime,
-          applyDate: data.applyDate
+          location: data.location as string,
+          date: data.date as string,
+          travelTime: data.travelTime as string,
+          applyDate: data.applyDate as Timestamp
         });
       });
       
