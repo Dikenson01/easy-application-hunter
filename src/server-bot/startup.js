@@ -5,6 +5,7 @@ console.log("Démarrage du serveur de candidature automatique...");
 try {
   // Importer et démarrer le serveur
   const app = require('./bot-server');
+  console.log("Serveur démarré avec succès sur le port 5000");
   console.log("Pour tester que le serveur fonctionne, ouvrez: http://localhost:5000/api/status");
   console.log("Laissez cette fenêtre ouverte pendant que l'application fonctionne");
 } catch (error) {
