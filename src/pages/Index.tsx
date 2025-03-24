@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/ui/header';
 import { StatusCard } from '@/components/dashboard/StatusCard';
 import { ActivityLog } from '@/components/dashboard/ActivityLog';
 import { BotControl } from '@/components/dashboard/BotControl';
+import { ServerStatus } from '@/components/dashboard/ServerStatus';
 import { useToast } from '@/hooks/use-toast';
 import { Clock, Briefcase, Building, X, MapPin, AlertCircle, FileUp, Bot } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -37,13 +37,11 @@ const Index = () => {
   const cvStatus = checkCVStatus();
   
   useEffect(() => {
-    // Charger les applications récentes au chargement de la page
     async function loadApplications() {
       try {
         const apps = await getRecentApplications();
         setApplications(apps);
         
-        // Calculer les applications du jour
         const today = new Date().toISOString().split('T')[0];
         const todayApplications = apps.filter(app => {
           if (app.applyDate) {
@@ -55,7 +53,6 @@ const Index = () => {
         
         setTodayApps(todayApplications.length);
         
-        // Générer les activités récentes basées sur les applications
         const activities: ActivityItem[] = apps.slice(0, 5).map(app => {
           return {
             id: app.id,
@@ -66,7 +63,6 @@ const Index = () => {
           };
         });
         
-        // Ajouter quelques activités supplémentaires si nécessaire
         if (activities.length < 5) {
           if (cvStatus.isUploaded) {
             activities.push({
@@ -102,18 +98,16 @@ const Index = () => {
     
     loadApplications();
     
-    // Vérifier l'état du bot
     const botStatus = localStorage.getItem('botRunning');
     if (botStatus === 'true') {
       setBotRunning(true);
     }
   }, [checkCVStatus, getRecentApplications]);
   
-  // Statistiques
   const stats = {
     totalApplications: applications.length || 0,
     todayApplications: todayApps,
-    activeJobs: 42, // Remplacer par une API ou Web Scraping pour un chiffre réel
+    activeJobs: 42,
     avgTravelTime: '32 min',
   };
   
@@ -135,7 +129,6 @@ const Index = () => {
     });
     
     try {
-      // Démarrer le bot (appel au backend)
       const result = await startBot();
       
       toast({
@@ -177,8 +170,9 @@ const Index = () => {
       <Header />
       
       <main className="flex-1 container max-w-7xl px-4 py-8 mx-auto">
+        <ServerStatus className="mb-6" />
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
-          {/* Bot Status Card */}
           <div className="md:col-span-1">
             <BotControl 
               onStart={handleStartBot}
@@ -213,7 +207,6 @@ const Index = () => {
             )}
           </div>
           
-          {/* Statistics Cards */}
           <div className="md:col-span-2">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <StatusCard 
@@ -283,9 +276,9 @@ const Index = () => {
                 Important
               </h4>
               <p className="text-sm text-green-700">
-                Pour que le bot fonctionne entièrement, le <strong>serveur backend doit être démarré</strong>. Exécutez le fichier <code>src/server/bot-server.js</code> dans un environnement Node.js avec:
+                Pour que le bot fonctionne entièrement, le <strong>serveur backend doit être démarré</strong>. Exécutez la commande:
               </p>
-              <pre className="mt-2 p-2 bg-green-200 rounded text-xs">node src/server/bot-server.js</pre>
+              <pre className="mt-2 p-2 bg-green-200 rounded text-xs">node src/server-bot/startup.js</pre>
               <p className="text-sm mt-2 text-green-700">
                 Le serveur écoutera sur le port 5000 et le bot pourra alors automatiser les candidatures.
               </p>
@@ -298,3 +291,4 @@ const Index = () => {
 };
 
 export default Index;
+
