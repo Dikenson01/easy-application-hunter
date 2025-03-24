@@ -10,7 +10,8 @@ import {
   Timestamp, 
   where, 
   doc, 
-  setDoc 
+  setDoc,
+  DocumentData
 } from "firebase/firestore";
 import { storage, db } from "@/lib/firebase";
 import axios from "axios";
@@ -185,10 +186,24 @@ export function useFirebase() {
       }
       
       const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Application[];
+      const applications: Application[] = [];
+      
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        applications.push({
+          id: doc.id,
+          jobTitle: data.jobTitle,
+          company: data.company,
+          platform: data.platform as "LinkedIn" | "Indeed" | "Hellowork",
+          status: data.status as 'applied' | 'pending' | 'error',
+          location: data.location,
+          date: data.date,
+          travelTime: data.travelTime,
+          applyDate: data.applyDate
+        });
+      });
+      
+      return applications;
     } catch (error) {
       console.error("Error getting applications:", error);
       return [];
