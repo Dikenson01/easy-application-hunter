@@ -1,5 +1,5 @@
 
-const admin = require("firebase-admin");
+import admin from 'firebase-admin';
 
 // Using environment variables or a fallback for local development
 const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT 
@@ -19,17 +19,42 @@ const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT
     };
 
 // Initialisation de l'application admin Firebase
+let db;
+let storage;
+
 try {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     storageBucket: "cv-auto-1f01e.appspot.com"
   });
   console.log("Firebase Admin SDK initialized successfully");
+  
+  db = admin.firestore();
+  storage = admin.storage();
 } catch (error) {
   console.error("Error initializing Firebase Admin SDK:", error);
+  
+  // Creating a mock Firestore implementation for demo mode
+  console.log('Using demo mode (without Firebase)');
+  db = {
+    collection: (name) => ({
+      doc: (id) => ({
+        get: async () => ({ exists: true, data: () => ({ id, name: 'Test User' }) }),
+        set: async (data) => console.log(`Mock: document ${id} written to ${name}`, data)
+      }),
+      where: () => ({ orderBy: () => ({ limit: () => ({ get: async () => ({ forEach: () => {} }) }) }) }),
+      orderBy: () => ({ limit: () => ({ get: async () => ({ forEach: () => {} }) }) }),
+      add: async (data) => console.log(`Mock: document added to ${name}`, data)
+    })
+  };
+  
+  storage = {
+    bucket: () => ({
+      file: () => ({
+        download: async () => console.log('Mock: file download')
+      })
+    })
+  };
 }
 
-const db = admin.firestore();
-const storage = admin.storage();
-
-module.exports = { admin, db, storage };
+export { admin, db, storage };

@@ -1,18 +1,12 @@
-const express = require('express');
-const cors = require('cors');
-const admin = require('firebase-admin');
-const jobScraper = require('./job-scraper');
-const jobApplicator = require('./job-applicator');
+
+import express from 'express';
+import cors from 'cors';
+import { db, admin } from './firebase-admin.js';
+import jobScraper from './job-scraper.js';
+import jobApplicator from './job-applicator.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-// Initialisation de Firebase Admin SDK
-if (!admin.apps.length) {
-  admin.initializeApp();
-}
-
-const db = admin.firestore();  // Initialiser Firestore
 
 // Middleware
 app.use(cors());
@@ -183,4 +177,4 @@ app.listen(PORT, () => {
   console.log(`Serveur bot démarré sur le port ${PORT}`);
 });
 
-module.exports = app;
+export default app;

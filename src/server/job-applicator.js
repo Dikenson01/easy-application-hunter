@@ -1,10 +1,10 @@
 
-const puppeteer = require("puppeteer");
-const axios = require("axios");
-const { db, storage, admin } = require("./firebase-admin");
-const fs = require("fs");
-const os = require("os");
-const path = require("path");
+import puppeteer from 'puppeteer';
+import axios from 'axios';
+import { db, storage, admin } from './firebase-admin.js';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 
 class JobApplicator {
   constructor() {
@@ -330,4 +330,5 @@ class JobApplicator {
   }
 }
 
-module.exports = new JobApplicator();
+const jobApplicator = new JobApplicator();
+export default jobApplicator;

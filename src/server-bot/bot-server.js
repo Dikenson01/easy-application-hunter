@@ -1,9 +1,9 @@
 
-const express = require('express');
-const cors = require('cors');
-const { db } = require('./firebase-admin');
-const jobScraper = require('./job-scraper');
-const jobApplicator = require('./job-applicator');
+import express from 'express';
+import cors from 'cors';
+import { db } from './firebase-admin.js';
+import jobScraper from '../server/job-scraper.js';
+import jobApplicator from '../server/job-applicator.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -188,4 +188,4 @@ app.listen(PORT, () => {
   console.log(`Accès à l'API: http://localhost:${PORT}/api/status`);
 });
 
-module.exports = app;
+export default app;

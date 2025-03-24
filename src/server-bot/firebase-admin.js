@@ -1,6 +1,6 @@
 
 // Import Firebase Admin SDK
-const admin = require('firebase-admin');
+import admin from 'firebase-admin';
 
 // Initialize Firebase Admin SDK
 let db;
@@ -31,4 +31,4 @@ try {
   };
 }
 
-module.exports = { db, admin };
+export { db, admin };

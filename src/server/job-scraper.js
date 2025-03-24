@@ -1,8 +1,8 @@
 
-const puppeteer = require("puppeteer");
-const cheerio = require("cheerio");
-const axios = require("axios");
-const { db } = require("./firebase-admin");
+import puppeteer from 'puppeteer';
+import cheerio from 'cheerio';
+import axios from 'axios';
+import { db, admin } from './firebase-admin.js';
 
 class JobScraper {
   constructor() {
@@ -217,4 +217,5 @@ class JobScraper {
   }
 }
 
-module.exports = new JobScraper();
+const jobScraper = new JobScraper();
+export default jobScraper;
