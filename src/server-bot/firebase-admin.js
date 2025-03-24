@@ -1,17 +1,34 @@
 
+// Import Firebase Admin SDK
 const admin = require('firebase-admin');
 
-// Vérifiez si Firebase Admin SDK est déjà initialisé
-if (!admin.apps.length) {
-  try {
-    // En développement, utilisez les identifiants par défaut
+// Initialize Firebase Admin SDK
+let db;
+
+try {
+  // Tentative d'initialisation avec les identifiants par défaut
+  if (!admin.apps.length) {
     admin.initializeApp();
-    console.log('Firebase Admin SDK initialisé avec succès');
-  } catch (error) {
-    console.error('Erreur lors de l\'initialisation de Firebase Admin SDK:', error);
   }
+  
+  db = admin.firestore();
+  console.log('Firebase Admin SDK initialisé avec succès');
+} catch (error) {
+  console.error('Erreur lors de l\'initialisation de Firebase Admin SDK:', error);
+  
+  // Création d'un mock de Firestore pour le mode démo
+  console.log('Utilisation du mode démo (sans Firebase)');
+  db = {
+    collection: (name) => ({
+      doc: (id) => ({
+        get: async () => ({ exists: true, data: () => ({ id, name: 'Utilisateur test' }) }),
+        set: async (data) => console.log(`Mock: document ${id} écrit dans ${name}`, data)
+      }),
+      where: () => ({ orderBy: () => ({ limit: () => ({ get: async () => ({ forEach: () => {} }) }) }) }),
+      orderBy: () => ({ limit: () => ({ get: async () => ({ forEach: () => {} }) }) }),
+      add: async (data) => console.log(`Mock: document ajouté à ${name}`, data)
+    })
+  };
 }
 
-const db = admin.firestore();
-
-module.exports = { admin, db };
+module.exports = { db, admin };
