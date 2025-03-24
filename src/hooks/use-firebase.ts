@@ -144,10 +144,13 @@ export function useFirebase() {
         applyDate: Timestamp.now()
       });
       
-      return {
+      // Fixed: Create a new object with spread and explicitly type it
+      const newApplication: Application = {
         id: docRef.id,
         ...application
-      } as Application; // Fixed: Added type assertion here
+      };
+      
+      return newApplication;
     } catch (error) {
       console.error("Error logging application:", error);
       throw error;
