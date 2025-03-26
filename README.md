@@ -24,7 +24,6 @@ Pour que le bot fonctionne complètement, vous aurez besoin de:
 
 1. Créer un compte de service Firebase et configurer les identifiants dans l'un de ces emplacements:
    - Variable d'environnement `FIREBASE_SERVICE_ACCOUNT` (JSON sous forme de chaîne)
-   - Fichier `src/server-bot/firebase-credentials.json`
    - Ou utiliser les identifiants par défaut (mode démo)
 
 2. Démarrer le serveur backend Node.js sur le port 5000
@@ -50,6 +49,18 @@ Le serveur backend est composé de plusieurs modules:
 
 Si vous rencontrez des erreurs:
 
+### Problème de clé privée Firebase
+Si vous obtenez une erreur liée à la clé privée:
+1. Assurez-vous que la clé privée est correctement formatée avec les délimiteurs `-----BEGIN PRIVATE KEY-----` et `-----END PRIVATE KEY-----`
+2. Si vous utilisez une variable d'environnement, vérifiez que les sauts de ligne sont correctement gérés (`\n`)
+
+### Port déjà utilisé (EADDRINUSE)
+Si le port 5000 est déjà occupé:
+1. Identifiez le processus avec `lsof -i :5000`
+2. Terminez le processus avec `kill -9 <PID>`
+3. Ou spécifiez un port alternatif: `SERVER_PORT=5001 node src/server-bot/startup.js`
+
+### Autres problèmes
 1. Vérifiez que le chemin vers `startup.js` est correct
 2. Assurez-vous que toutes les dépendances sont installées
 3. Vérifiez la console pour les messages d'erreur spécifiques

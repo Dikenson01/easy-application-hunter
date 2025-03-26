@@ -1,14 +1,37 @@
 
 // Import Firebase Admin SDK
-import admin from 'firebase-admin';
+import admin from 'firebase/admin';
+import { createRequire } from 'module';
+
+// Utilisé pour charger les fichiers JSON en mode ES modules
+const require = createRequire(import.meta.url);
 
 // Initialize Firebase Admin SDK
 let db;
 
 try {
   // Tentative d'initialisation avec les identifiants par défaut
-  if (!admin.apps.length) {
-    admin.initializeApp();
+  const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT 
+    ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+    : undefined;
+  
+  // Si un serviceAccount est défini, on l'utilise
+  if (serviceAccount) {
+    // Correction des sauts de ligne dans la clé privée si nécessaire
+    if (serviceAccount.private_key && !serviceAccount.private_key.includes("\n")) {
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+    }
+    
+    if (!admin.apps.length) {
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount)
+      });
+    }
+  } else {
+    // Sinon, tentative avec les identifiants par défaut
+    if (!admin.apps.length) {
+      admin.initializeApp();
+    }
   }
   
   db = admin.firestore();

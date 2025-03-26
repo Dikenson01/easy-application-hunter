@@ -1,4 +1,3 @@
-
 import express from 'express';
 import cors from 'cors';
 import { db } from './firebase-admin.js';
@@ -6,7 +5,7 @@ import jobScraper from '../server/job-scraper.js';
 import jobApplicator from '../server/job-applicator.js';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || process.env.SERVER_PORT || 5000;
 
 // Middleware
 app.use(cors());
@@ -182,10 +181,26 @@ app.get('/api/applications', async (req, res) => {
   }
 });
 
-// Démarrer le serveur
-app.listen(PORT, () => {
-  console.log(`Serveur bot démarré sur le port ${PORT}`);
-  console.log(`Accès à l'API: http://localhost:${PORT}/api/status`);
-});
+// Démarrer le serveur avec gestion des erreurs de port
+const startServer = () => {
+  try {
+    app.listen(PORT, () => {
+      console.log(`Serveur bot démarré sur le port ${PORT}`);
+      console.log(`Accès à l'API: http://localhost:${PORT}/api/status`);
+    });
+  } catch (error) {
+    if (error.code === 'EADDRINUSE') {
+      console.error(`Le port ${PORT} est déjà utilisé.`);
+      console.log('Suggestions:');
+      console.log(`1. Libérez le port avec la commande: lsof -i :${PORT} puis kill -9 <PID>`);
+      console.log('2. Ou spécifiez un port différent avec:');
+      console.log('   SERVER_PORT=5001 node src/server-bot/startup.js');
+    } else {
+      console.error('Erreur au démarrage du serveur:', error);
+    }
+  }
+};
+
+startServer();
 
 export default app;
