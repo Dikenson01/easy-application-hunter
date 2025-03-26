@@ -13,10 +13,18 @@ export const ServerStatus: React.FC<ServerStatusProps> = ({ className }) => {
   const [status, setStatus] = useState<'online' | 'offline'>('offline');
   const [message, setMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
+  const [serverUrl, setServerUrl] = useState<string>('http://localhost:5000');
 
   const checkServerStatus = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/status', { timeout: 3000 });
+      console.log(`Vérification du serveur à l'adresse: ${serverUrl}/api/status`);
+      const response = await axios.get(`${serverUrl}/api/status`, { 
+        timeout: 3000,
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      console.log('Réponse du serveur:', response.data);
+      
       if (response.data && response.data.status === 'online') {
         setStatus('online');
         setMessage(response.data.message || 'Serveur disponible');
@@ -72,7 +80,7 @@ export const ServerStatus: React.FC<ServerStatusProps> = ({ className }) => {
                   <span className="text-sm font-medium text-red-700">Hors ligne</span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Lancez le serveur avec: <code className="px-1 bg-slate-100 rounded text-[10px]">node src/server-bot/startup.js</code>
+                  Lancez le serveur avec: <code className="px-1 bg-slate-100 rounded text-[10px]">node src/server/startup.cjs</code>
                 </p>
               </div>
             </>
