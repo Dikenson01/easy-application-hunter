@@ -4,6 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Server, WifiOff } from 'lucide-react';
 import axios from 'axios';
+import { serverConfig } from '@/config/firebase-config';
+import { useToast } from '@/hooks/use-toast';
 
 interface ServerStatusProps {
   className?: string;
@@ -13,13 +15,14 @@ export const ServerStatus: React.FC<ServerStatusProps> = ({ className }) => {
   const [status, setStatus] = useState<'online' | 'offline'>('offline');
   const [message, setMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
-  const [serverUrl, setServerUrl] = useState<string>('http://localhost:5000');
+  const { toast } = useToast();
+  const serverUrl = serverConfig.url;
 
   const checkServerStatus = async () => {
     try {
-      console.log(`Vérification du serveur à l'adresse: ${serverUrl}/api/status`);
-      const response = await axios.get(`${serverUrl}/api/status`, { 
-        timeout: 3000,
+      console.log(`Vérification du serveur à l'adresse: ${serverUrl}${serverConfig.apiPath}/status`);
+      const response = await axios.get(`${serverUrl}${serverConfig.apiPath}/status`, { 
+        timeout: serverConfig.timeout,
         headers: { 'Content-Type': 'application/json' }
       });
       
@@ -28,6 +31,13 @@ export const ServerStatus: React.FC<ServerStatusProps> = ({ className }) => {
       if (response.data && response.data.status === 'online') {
         setStatus('online');
         setMessage(response.data.message || 'Serveur disponible');
+        
+        if (status === 'offline') {
+          toast({
+            title: 'Serveur connecté',
+            description: 'Le serveur de candidature est maintenant disponible',
+          });
+        }
       } else {
         setStatus('offline');
         setMessage('Réponse du serveur invalide');

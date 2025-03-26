@@ -1,0 +1,33 @@
+
+// Configuration centralisée pour Firebase
+export const firebaseConfig = {
+  apiKey: "AIzaSyA-vxX7VK47JWfb0IvPIrKTJ0a0wS6PFeU",
+  authDomain: "cv-auto-1f01e.firebaseapp.com",
+  projectId: "cv-auto-1f01e",
+  storageBucket: "cv-auto-1f01e.appspot.com",
+  messagingSenderId: "781780535299",
+  appId: "1:781780535299:web:3f27b92171f3763178e636",
+  measurementId: "G-M9SXEKFRZW"
+};
+
+// Configuration du compte de service Firebase Admin
+export const serviceAccount = {
+  type: "service_account",
+  project_id: "cv-auto-1f01e",
+  private_key_id: "1e92e4b35b0a4a7d4f410fb5faf4600d94f611b2",
+  private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCJFGuE1fbAX5HA\nCMzxRHXk06XgRhb4L2ytBKNztGWHQ8iGSVZ1UTiy5kydAD6yjG+aX3pzQcuS7WBO\n3XPG75tFDaAZKSVKtDFC9GNVcLfMbRyj/rzZsr2foumM8brSRZvCfggj6LEUjOll\nN4vChsm2A3kttXV8J4IgcyY7JdK6qvJNuwNbGJeiKjwrcOaDUYkH+qt2xi5TXUn1\ng1bC1VW5j1KFjfkf39dgkOfsZYTIzSgt9A5wMxQxNzJbCLn+v7lOfqhQ6jV5AOzA\nEWH8HFaOHktOCQ1rlvAYOUZG8HrjuJrHlGbTCOGiqsB2k1q3gDEcCSjf4MSH//TP\nF68GkU11AgMBAAECggEAAw7MIt4v/yoSmFVJ7GQxz2KDln1nGURbjlTREu1rqgkH\nzIEPIeunfLbORN6ix2etEfqTwsWYCtrAis8opup6N5/eb06U6PXx4bO4ZzPuEawU\nbGRsENzKcJNugMj1Tn1O2cI8db/veqJ1uV7ev1PeOjEZJKfMgLIT68aNzC945CuQ\nLZGVQeaQ127YMkmPZkwIGLC1uFgj+tLTSmUCSSUmxyxgTli+ioojCE63FqzR5fk3\nEnFMOc5VobacfHGqMdu3dgtAB8ibrr/fqsx2kthdaifaQExbE5OL4wDREXspWyrx\ndN1TfYlaRsgt8dZqx4Q+url6e9aZJVTUxmxpVHFHUQKBgQDAvsmOt1Svs9+uRPtg\ni3+MN3+jZ3sgAQRMZRJZdFh9Ozm6ujXzfCMzYJeSnZEPD2B1fpKVWsmELZuQ4YnZ\nd+AlSCEJGzy4hC9+suxpnKZpzn3VUJHOh8SauilF/xmlY3PPCbRw4V8s9O62Diew\nOxrz3vB3s4wGKIa3JdR2NUBhJQKBgQC2EPoYhM0hRAyZo4zh+I/bgQ6jTVnptv+e\niq7jrxo6Gww1tPMly8b9JFbkB4CNsUqLBg4awLSnKhNX+dsbn5Cth/Sv8Q2WSPbj\nrqX6Qn2C466wxbeuCjkDp3UZ/BAQ4Sfdrj2GgkZn6Xhg2ia1obvkNr3NJnrGaUiv\n1XIjDmlSEQKBgAGpY2l0kSlWnqYM+DHT4gyead5JxRj4iUXzVR4qT5z8xrmiY1av\nCkqmGYhtDVQY6Nb6eV8KQlR+ZCnyl9KlIuyPW6GNd4+LrDEmb71VWWXuHs2Y/TjP\nmNVQp4xv75OqcNQnHEQg3UYw8mHla1gsmkXh9SbDCIEBFnA7xkIioWR1AoGAfi1X\n1iQ7MYHCpbumCHlF4Z8YcO5LkOClWM/OErcomvphxNrJ4/jMyGUl3tSgMBKdkam5\nnqrMyEktrLvZMNSt5MWjO0f43Z1llTdVihIIf+yhBZuRB4nIJ5MnYcHBtKEGCukV\ndKHWf29bYOvvBdO3rpqNgZ7YWadfm5R2jHsRXLECgYBLfqHEHfXLEKN6e8fPuNO9\nZekVcbMWsVHfdWHSpK9okwwgvanFS/tBuqP4FSSeZAXD2EWkIhGLHwzWj2k+NHiN\nEOFUIC07GTzjywQ1sBTU/XceqCmRxKfmceMY3noW07z/iZvMp5E9cH2FOHbCZ7vE\nr4puTOSh2BqAFPhEn/kIgA==\n-----END PRIVATE KEY-----\n",
+  client_email: "firebase-adminsdk-fbsvc@cv-auto-1f01e.iam.gserviceaccount.com",
+  client_id: "109796642503469018446",
+  auth_uri: "https://accounts.google.com/o/oauth2/auth",
+  token_uri: "https://oauth2.googleapis.com/token",
+  auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+  client_x509_cert_url: "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40cv-auto-1f01e.iam.gserviceaccount.com",
+  universe_domain: "googleapis.com"
+};
+
+// Configuration du serveur
+export const serverConfig = {
+  url: 'http://localhost:5000',
+  apiPath: '/api',
+  timeout: 5000,
+};
