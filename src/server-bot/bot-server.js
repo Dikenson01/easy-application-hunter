@@ -3,9 +3,13 @@ import cors from 'cors';
 import { db } from './firebase-admin.js';
 import jobScraper from '../server/job-scraper.js';
 import jobApplicator from '../server/job-applicator.js';
+import initTelegramBot from './telegram-bot.js';
 
 const app = express();
 const PORT = process.env.PORT || process.env.SERVER_PORT || 5000;
+
+// Initialize Telegram Bot
+const telegramBot = initTelegramBot();
 
 // Middleware
 app.use(cors());
