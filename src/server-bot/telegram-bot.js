@@ -1,5 +1,5 @@
 
-import TelegramBot from 'node-telegram-bot-api';
+const TelegramBot = require('node-telegram-bot-api');
 
 // Initialize Telegram bot with environment variables
 const initTelegramBot = () => {
@@ -35,4 +35,4 @@ const initTelegramBot = () => {
   return bot;
 };
 
-export default initTelegramBot;
+module.exports = initTelegramBot;
