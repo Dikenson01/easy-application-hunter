@@ -1,18 +1,19 @@
-const express = require('express');
-const cors = require('cors');
-const initTelegramBot = require('./telegram-bot.js');
+
+import express from 'express';
+import cors from 'cors';
+import initTelegramBot from './telegram-bot.js';
 
 // Import other modules (use appropriate paths based on project structure)
 let db, jobScraper, jobApplicator;
 
 try {
   // Try to import Firebase admin
-  const firebase = require('./firebase-admin.js');
+  const firebase = await import('./firebase-admin.js');
   db = firebase.db;
   
   // Try to import job modules
-  jobScraper = require('../server/job-scraper.js');
-  jobApplicator = require('../server/job-applicator.js');
+  jobScraper = await import('../server/job-scraper.js');
+  jobApplicator = await import('../server/job-applicator.js');
 } catch (error) {
   console.warn('Some imports failed. Running in limited mode:', error.message);
   
@@ -253,4 +254,4 @@ const startServer = () => {
 
 startServer();
 
-module.exports = app;
+export default app;
